@@ -3,12 +3,12 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
+    "app",
+    ".expo/types/router.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
