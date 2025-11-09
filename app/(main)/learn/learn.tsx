@@ -49,16 +49,18 @@ export default function Learn() {
             }}
             onPress={() => router.push("/(main)/learn/learn")}
           >
-            <View style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#FF9F0A20",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 16,
-            }}>
-              <Ionicons name="book" size={24} color="#FF9F0A" />
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: colors.warningSoft,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 16,
+              }}
+            >
+              <Ionicons name="book" size={24} color={colors.warning} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -89,16 +91,18 @@ export default function Learn() {
             }}
             onPress={() => router.push("/(main)/learn/learn")}
           >
-            <View style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#007AFF20",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 16,
-            }}>
-              <Ionicons name="albums" size={24} color="#007AFF" />
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: colors.primarySoft,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 16,
+              }}
+            >
+              <Ionicons name="albums" size={24} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -129,16 +133,18 @@ export default function Learn() {
             }}
             onPress={() => router.push("/(main)/learn/learn")}
           >
-            <View style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#34C75920",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 16,
-            }}>
-              <Ionicons name="reader" size={24} color="#34C759" />
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: colors.successSoft,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 16,
+              }}
+            >
+              <Ionicons name="reader" size={24} color={colors.success} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -169,16 +175,18 @@ export default function Learn() {
               }}
               onPress={() => router.push("/(main)/learn/learn")}
             >
-              <View style={{
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-                backgroundColor: "#AA6FD620",
-                justifyContent: "center",
-                alignItems: "center",
-                marginRight: 16,
-              }}>
-                <Ionicons name="copy" size={24} color="#AA6FD6" />
+              <View
+                style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 25,
+                  backgroundColor: colors.purpleSoft,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginRight: 16,
+                }}
+              >
+                <Ionicons name="copy" size={24} color={colors.purple} />
               </View>
               <View style={{ flex: 1 }}>
                 <Text

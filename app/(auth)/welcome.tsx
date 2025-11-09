@@ -53,7 +53,7 @@ export default function Welcome() {
           <Text
             style={[
               styles.primaryButtonText,
-              { fontSize: scaleFont(18) },
+              { fontSize: scaleFont(18), color: colors.onPrimary },
             ]}
           >
             Get Started
@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   primaryButtonText: {
-    color: "#FFFFFF",
     fontWeight: "600",
   },
   secondaryButton: {

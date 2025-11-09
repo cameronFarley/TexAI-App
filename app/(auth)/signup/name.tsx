@@ -33,6 +33,7 @@ export default function NameInput() {
       // Navigate to tabs
       router.replace("/(main)/home/home");
     } catch (error) {
+      console.error("Failed to save user names:", error);
       Alert.alert("Error", "Failed to save your information");
     }
   };
@@ -54,7 +55,7 @@ export default function NameInput() {
           marginBottom: 10,
         }}
       >
-        What's your name?
+        What’s your name?
       </Text>
 
       <Text
@@ -64,7 +65,7 @@ export default function NameInput() {
           marginBottom: 30,
         }}
       >
-        Let's get to know you better
+        Let’s get to know you better
       </Text>
 
       {/* Entry boxes */}
@@ -111,7 +112,7 @@ export default function NameInput() {
       >
         <Text
           style={{
-            color: "#FFFFFF",
+            color: colors.onPrimary,
             fontSize: scaleFont(16),
             fontWeight: "600",
           }}

@@ -83,6 +83,7 @@ export default function Settings() {
             await AsyncStorage.clear();
             router.replace("/(auth)/welcome");
           } catch (error) {
+            console.error("Failed to logout user:", error);
             Alert.alert("Error", "Failed to logout");
           }
         },
@@ -98,7 +99,7 @@ export default function Settings() {
     setFontScale(scaled);
   };
 
-  const quickSettings: Array<{ icon: IconName; label: string }> = [
+  const quickSettings: { icon: IconName; label: string }[] = [
     { icon: "person-outline", label: "Edit Profile" },
     { icon: "notifications-outline", label: "Notifications" },
     { icon: "help-circle-outline", label: "Help & Support" },
@@ -142,7 +143,7 @@ export default function Settings() {
               marginBottom: 16,
             }}
           >
-            <Ionicons name="person" size={40} color="#FFFFFF" />
+            <Ionicons name="person" size={40} color={colors.onPrimary} />
           </View>
           <Text
             style={{
@@ -245,7 +246,7 @@ export default function Settings() {
                 <Switch
                   value={colorScheme === "light"}
                   onValueChange={setLightModeEnabled}
-                  thumbColor="#f4f3f4"
+                  thumbColor={colors.onPrimary}
                   trackColor={{ false: colors.border, true: colors.primary }}
                 />
               </View>
@@ -273,7 +274,7 @@ export default function Settings() {
                 <Switch
                   value={highContrast}
                   onValueChange={setHighContrast}
-                  thumbColor="#f4f3f4"
+                  thumbColor={colors.onPrimary}
                   trackColor={{ false: colors.border, true: colors.primary }}
                 />
               </View>
@@ -402,7 +403,7 @@ export default function Settings() {
         >
           <Text
             style={{
-              color: "#FFFFFF",
+              color: colors.onPrimary,
               fontSize: scaleFont(16),
               fontWeight: "600",
             }}

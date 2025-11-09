@@ -23,12 +23,14 @@ type ThemeColors = {
   overlay: string;
   primary: string;
   primarySoft: string;
+  onPrimary: string;
   inputBackground: string;
   chip: string;
   success: string;
   successSoft: string;
   warning: string;
   warningSoft: string;
+  purple: string;
   purpleSoft: string;
   destructive: string;
 };
@@ -172,6 +174,10 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
         : "#FFD60A"
       : "#007AFF";
 
+    const onPrimary =
+      highContrast && colorScheme === "dark" ? "#000000" : "#FFFFFF";
+    const purple = colorScheme === "dark" ? "#AA6FD6" : "#8A4FFF";
+
     return {
       ...palette,
       primary,
@@ -179,6 +185,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
         colorScheme === "dark"
           ? "rgba(0,122,255,0.2)"
           : "rgba(0,122,255,0.12)",
+      onPrimary,
       inputBackground: highContrast
         ? colorScheme === "dark"
           ? "#000000"
@@ -197,6 +204,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
         colorScheme === "dark"
           ? "rgba(255,159,10,0.2)"
           : "rgba(255,159,10,0.12)",
+      purple,
       purpleSoft:
         colorScheme === "dark"
           ? "rgba(170,111,214,0.25)"
@@ -247,4 +255,3 @@ export function useAppearance() {
   }
   return context;
 }
-

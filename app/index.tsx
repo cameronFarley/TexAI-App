@@ -23,6 +23,7 @@ export default function Index() {
       const loggedIn = await AsyncStorage.getItem("isLoggedIn");
       setIsLoggedIn(loggedIn === "true");
     } catch (error) {
+      console.error("Failed to check login status:", error);
       setIsLoggedIn(false);
     }
   };

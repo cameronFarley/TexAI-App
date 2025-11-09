@@ -144,7 +144,7 @@ export default function Calendar() {
       >
         <Text
           style={{
-            color: "#FFFFFF",
+            color: colors.onPrimary,
             fontSize: scaleFont(16),
             fontWeight: "600",
           }}
@@ -437,7 +437,7 @@ export default function Calendar() {
                   >
                     <Text
                       style={{
-                        color: "#FFFFFF",
+                        color: colors.onPrimary,
                         fontSize: scaleFont(16),
                         fontWeight: "600",
                       }}

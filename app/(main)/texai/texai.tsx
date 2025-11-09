@@ -82,6 +82,7 @@ export default function Chat() {
 
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
+      console.error("Chat request failed:", error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: "Sorry, there was an error connecting to the chatbot.",
@@ -130,7 +131,7 @@ export default function Chat() {
               >
                 <Text
                   style={{
-                    color: item.sender === "user" ? "#FFFFFF" : colors.text,
+                    color: item.sender === "user" ? colors.onPrimary : colors.text,
                     fontSize: scaleFont(16),
                   }}
                 >
@@ -198,7 +199,7 @@ export default function Chat() {
             alignItems: "center",
           }}
         >
-          <Ionicons name="send" size={20} color="white" />
+          <Ionicons name="send" size={20} color={colors.onPrimary} />
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>

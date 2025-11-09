@@ -92,16 +92,18 @@ export default function Home() {
             }}
             onPress={() => router.push("/(main)/calendar/calendar")}
           >
-            <View style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#007AFF20",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 16,
-            }}>
-              <Ionicons name="calendar" size={24} color="#007AFF" />
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: colors.primarySoft,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 16,
+              }}
+            >
+              <Ionicons name="calendar" size={24} color={colors.primary} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -131,16 +133,18 @@ export default function Home() {
             }}
             onPress={() => router.push("/(main)/texai/texai")}
           >
-            <View style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#34C75920",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 16,
-            }}>
-              <Ionicons name="chatbubbles" size={24} color="#34C759" />
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: colors.successSoft,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 16,
+              }}
+            >
+              <Ionicons name="chatbubbles" size={24} color={colors.success} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -170,16 +174,18 @@ export default function Home() {
             }}
             onPress={() => router.push("/(main)/home/home")}
           >
-            <View style={{
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-              backgroundColor: "#FF9F0A20",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: 16,
-            }}>
-              <Ionicons name="stats-chart" size={24} color="#FF9F0A" />
+            <View
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+                backgroundColor: colors.warningSoft,
+                justifyContent: "center",
+                alignItems: "center",
+                marginRight: 16,
+              }}
+            >
+              <Ionicons name="stats-chart" size={24} color={colors.warning} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -200,7 +206,7 @@ export default function Home() {
           </TouchableOpacity>
         </View>
 
-        {/* Today's Overview */}
+        {/* Today’s Overview */}
         <View style={{ marginTop: 40 }}>
           <Text
             style={{
@@ -210,7 +216,7 @@ export default function Home() {
               marginBottom: 16,
             }}
           >
-            Today's Overview
+            Today’s Overview
           </Text>
           
           <View
