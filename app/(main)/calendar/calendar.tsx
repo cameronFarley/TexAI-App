@@ -2,15 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker, {
   DateTimePickerAndroid,
 } from "@react-native-community/datetimepicker";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Alert,
-  FlatList,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
   ScrollView,
+  SectionList,
   Text,
   TextInput,
   TouchableOpacity,
@@ -48,15 +48,46 @@ const formatDisplayDate = (date: Date) =>
     year: "numeric",
   });
 
+const pad = (value: number) => value.toString().padStart(2, "0");
+
+const formatLocalDateKey = (date: Date) =>
+  `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+
+const parseLocalDateKey = (key: string) => {
+  const [year, month, day] = key.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+const getDateTimeValue = (dateKey: string, time: string) => {
+  const date = parseLocalDateKey(dateKey);
+  if (TIME_REGEX.test(time)) {
+    const [hour, minute] = time.split(":").map(Number);
+    date.setHours(hour, minute, 0, 0);
+  } else {
+    date.setHours(0, 0, 0, 0);
+  }
+  return date.getTime();
+};
+
+type ThemeColors = ReturnType<typeof useAppearance>["colors"];
+
 export default function Calendar() {
   const [events, setEvents] = useState<Event[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [title, setTitle] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDateInput, setSelectedDateInput] = useState<Date | null>(null);
   const [showIOSDatePicker, setShowIOSDatePicker] = useState(false);
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
+  const [viewMode, setViewMode] = useState<"agenda" | "calendar">("agenda");
   const showTimeError = time.length === 5 && !TIME_REGEX.test(time);
+
+  const todayISO = formatLocalDateKey(new Date());
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+  const [selectedDateISO, setSelectedDateISO] = useState(todayISO);
 
   const { colors, scaleFont, colorScheme } = useAppearance();
   const insets = useSafeAreaInsets();
@@ -74,7 +105,7 @@ export default function Calendar() {
   };
 
   const addEvent = () => {
-    if (!title || !selectedDate || !time) {
+    if (!title || !selectedDateInput || !time) {
       Alert.alert("Error", "Please fill in all required fields");
       return;
     }
@@ -84,8 +115,8 @@ export default function Calendar() {
       return;
     }
 
-    const dateISO = selectedDate.toISOString().split("T")[0];
-    const dateLabel = formatDisplayDate(selectedDate);
+    const dateISO = formatLocalDateKey(selectedDateInput);
+    const dateLabel = formatDisplayDate(selectedDateInput);
 
     const newEvent: Event = {
       id: Date.now().toString(),
@@ -96,16 +127,14 @@ export default function Calendar() {
       description,
     };
 
-    setEvents(
-      [...events, newEvent].sort(
-        (a, b) =>
-          new Date(`${a.dateISO} ${a.time}`).getTime() -
-          new Date(`${b.dateISO} ${b.time}`).getTime()
+    setEvents((prev) =>
+      [...prev, newEvent].sort(
+        (a, b) => getDateTimeValue(a.dateISO, a.time) - getDateTimeValue(b.dateISO, b.time)
       )
     );
 
     setTitle("");
-    setSelectedDate(null);
+    setSelectedDateInput(null);
     setShowIOSDatePicker(false);
     setTime("");
     setDescription("");
@@ -118,10 +147,90 @@ export default function Calendar() {
       {
         text: "Delete",
         style: "destructive",
-        onPress: () => setEvents(events.filter((e) => e.id !== id)),
+        onPress: () => setEvents((prev) => prev.filter((e) => e.id !== id)),
       },
     ]);
   };
+
+  const sortedEvents = useMemo(
+    () =>
+      [...events].sort(
+        (a, b) => getDateTimeValue(a.dateISO, a.time) - getDateTimeValue(b.dateISO, b.time)
+      ),
+    [events]
+  );
+
+  const eventsByDate = useMemo(() => {
+    const acc: Record<string, Event[]> = {};
+    sortedEvents.forEach((event) => {
+      if (!acc[event.dateISO]) {
+        acc[event.dateISO] = [];
+      }
+      acc[event.dateISO].push(event);
+    });
+    return acc;
+  }, [sortedEvents]);
+
+  const selectedDateEvents = eventsByDate[selectedDateISO] ?? [];
+
+  const agendaSections = useMemo(() => {
+    const groups: Record<
+      string,
+      { title: string; data: Event[] }
+    > = {};
+    sortedEvents.forEach((event) => {
+      const dateObj = parseLocalDateKey(event.dateISO);
+      const key = `${dateObj.getFullYear()}-${dateObj.getMonth()}`;
+      if (!groups[key]) {
+        groups[key] = {
+          title: dateObj.toLocaleDateString(undefined, {
+            month: "long",
+            year: "numeric",
+          }),
+          data: [],
+        };
+      }
+      groups[key].data.push(event);
+    });
+    return Object.values(groups);
+  }, [sortedEvents]);
+
+  const calendarMatrix = useMemo(() => {
+    const firstDay = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth(),
+      1
+    );
+    const startDay = firstDay.getDay();
+    const matrix: { date: Date; inMonth: boolean; iso: string }[][] = [];
+    const cursor = new Date(firstDay);
+    cursor.setDate(cursor.getDate() - startDay);
+
+    for (let week = 0; week < 6; week++) {
+      const row: { date: Date; inMonth: boolean; iso: string }[] = [];
+      for (let day = 0; day < 7; day++) {
+        const clone = new Date(cursor);
+        row.push({
+          date: clone,
+          inMonth: clone.getMonth() === currentMonth.getMonth(),
+          iso: formatLocalDateKey(clone),
+        });
+        cursor.setDate(cursor.getDate() + 1);
+      }
+      matrix.push(row);
+    }
+    return matrix;
+  }, [currentMonth]);
+
+  const renderEventCard = (item: Event) => (
+    <EventCard
+      key={item.id}
+      item={item}
+      colors={colors}
+      scaleFont={scaleFont}
+      onDelete={deleteEvent}
+    />
+  );
 
   return (
     <View
@@ -132,6 +241,41 @@ export default function Calendar() {
         paddingTop: topPadding,
       }}
     >
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: colors.card,
+          padding: 4,
+          borderRadius: 12,
+          marginBottom: 16,
+        }}
+      >
+        {(["agenda", "calendar"] as const).map((mode) => (
+          <TouchableOpacity
+            key={mode}
+            style={{
+              flex: 1,
+              borderRadius: 8,
+              paddingVertical: 10,
+              backgroundColor:
+                viewMode === mode ? colors.primary : "transparent",
+              alignItems: "center",
+            }}
+            onPress={() => setViewMode(mode)}
+          >
+            <Text
+              style={{
+                color: viewMode === mode ? colors.onPrimary : colors.text,
+                fontWeight: "600",
+                fontSize: scaleFont(14),
+              }}
+            >
+              {mode === "agenda" ? "Agenda" : "Calendar"}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
       <TouchableOpacity
         style={{
           backgroundColor: colors.primary,
@@ -153,83 +297,205 @@ export default function Calendar() {
         </Text>
       </TouchableOpacity>
 
-      {events.length === 0 ? (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Ionicons name="calendar-outline" size={64} color={colors.muted} />
-          <Text
+      {viewMode === "agenda" ? (
+        events.length === 0 ? (
+          <EmptyState colors={colors} scaleFont={scaleFont} />
+        ) : (
+          <SectionList
+            sections={agendaSections}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{ paddingBottom: 40 }}
+            stickySectionHeadersEnabled={false}
+            renderSectionHeader={({ section }) => (
+              <Text
+                style={{
+                  color: colors.text,
+                  fontSize: scaleFont(16),
+                  fontWeight: "600",
+                  marginTop: 20,
+                  marginBottom: 8,
+                }}
+              >
+                {section.title}
+              </Text>
+            )}
+            renderItem={({ item }) => renderEventCard(item)}
+          />
+        )
+      ) : (
+        <View style={{ flex: 1 }}>
+          <View
             style={{
-              color: colors.muted,
-              marginTop: 10,
-              fontSize: scaleFont(16),
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 12,
             }}
           >
-            No events yet
-          </Text>
-        </View>
-      ) : (
-        <FlatList
-          data={events}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 40 }}
-          renderItem={({ item }) => (
-            <View
+            <TouchableOpacity
               style={{
+                padding: 8,
                 backgroundColor: colors.card,
-                padding: 16,
-                borderRadius: 12,
-                marginBottom: 12,
+                borderRadius: 8,
+              }}
+              onPress={() =>
+                setCurrentMonth(
+                  (prev) =>
+                    new Date(prev.getFullYear(), prev.getMonth() - 1, 1)
+                )
+              }
+            >
+              <Ionicons name="chevron-back" size={20} color={colors.text} />
+            </TouchableOpacity>
+            <Text
+              style={{
+                color: colors.text,
+                fontSize: scaleFont(18),
+                fontWeight: "600",
               }}
             >
+              {currentMonth.toLocaleDateString(undefined, {
+                month: "long",
+                year: "numeric",
+              })}
+            </Text>
+            <TouchableOpacity
+              style={{
+                padding: 8,
+                backgroundColor: colors.card,
+                borderRadius: 8,
+              }}
+              onPress={() =>
+                setCurrentMonth(
+                  (prev) =>
+                    new Date(prev.getFullYear(), prev.getMonth() + 1, 1)
+                )
+              }
+            >
+              <Ionicons name="chevron-forward" size={20} color={colors.text} />
+            </TouchableOpacity>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 6,
+            }}
+          >
+            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              <Text
+                key={day}
+                style={{
+                  width: `${100 / 7}%`,
+                  textAlign: "center",
+                  color: colors.muted,
+                  fontSize: scaleFont(12),
+                }}
+              >
+                {day}
+              </Text>
+            ))}
+          </View>
+
+          <View style={{ flex: 1 }}>
+            {calendarMatrix.map((week, index) => (
               <View
+                key={index}
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  alignItems: "center",
+                  marginBottom: 6,
                 }}
               >
-                <Text
-                  style={{
-                    color: colors.text,
-                    fontSize: scaleFont(18),
-                    fontWeight: "600",
-                    flex: 1,
-                  }}
-                >
-                  {item.title}
-                </Text>
-                <TouchableOpacity onPress={() => deleteEvent(item.id)}>
-                  <Ionicons name="trash-outline" size={20} color={colors.destructive} />
-                </TouchableOpacity>
+                {week.map((day) => {
+                  const isSelected = day.iso === selectedDateISO;
+                  const isToday = day.iso === todayISO;
+                  const hasEvents = (eventsByDate[day.iso] ?? []).length > 0;
+                  return (
+                    <TouchableOpacity
+                      key={day.iso}
+                      style={{
+                        width: `${100 / 7}%`,
+                        aspectRatio: 1,
+                        borderRadius: 8,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: isSelected
+                          ? colors.primary
+                          : "transparent",
+                        borderWidth: isToday && !isSelected ? 1 : 0,
+                        borderColor: colors.primary,
+                        opacity: day.inMonth ? 1 : 0.35,
+                      }}
+                      onPress={() => {
+                        setSelectedDateISO(day.iso);
+                        setCurrentMonth(
+                          new Date(
+                            day.date.getFullYear(),
+                            day.date.getMonth(),
+                            1
+                          )
+                        );
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: isSelected ? colors.onPrimary : colors.text,
+                          fontWeight: isSelected ? "700" : "500",
+                          fontSize: scaleFont(14),
+                        }}
+                      >
+                        {day.date.getDate()}
+                      </Text>
+                      {hasEvents ? (
+                        <View
+                          style={{
+                            width: 6,
+                            height: 6,
+                            borderRadius: 3,
+                            marginTop: 4,
+                            backgroundColor: isSelected
+                              ? colors.onPrimary
+                              : colors.primary,
+                          }}
+                        />
+                      ) : null}
+                    </TouchableOpacity>
+                  );
+                })}
               </View>
-              <Text
-                style={{
-                  color: colors.muted,
-                  marginTop: 8,
-                  fontSize: scaleFont(14),
-                }}
-              >
-                {item.dateLabel} at {item.time}
+            ))}
+          </View>
+
+          <View style={{ marginTop: 12 }}>
+            <Text
+              style={{
+                color: colors.text,
+                fontSize: scaleFont(16),
+                fontWeight: "600",
+                marginBottom: 8,
+              }}
+            >
+              Events on{" "}
+              {parseLocalDateKey(selectedDateISO).toLocaleDateString(
+                undefined,
+                {
+                  weekday: "long",
+                  month: "short",
+                  day: "numeric",
+                }
+              )}
+            </Text>
+            {selectedDateEvents.length === 0 ? (
+              <Text style={{ color: colors.muted }}>
+                No events scheduled for this day.
               </Text>
-              {item.description ? (
-                <Text
-                  style={{
-                    color: colors.text,
-                    marginTop: 8,
-                    fontSize: scaleFont(14),
-                  }}
-                >
-                  {item.description}
-                </Text>
-              ) : null}
-            </View>
-          )}
-        />
+            ) : (
+              selectedDateEvents.map((event) => renderEventCard(event))
+            )}
+          </View>
+        </View>
       )}
 
       <Modal
@@ -296,18 +562,20 @@ export default function Calendar() {
                   <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={() => {
+                      const baseDate = selectedDateInput ?? parseLocalDateKey(selectedDateISO);
                       if (Platform.OS === "android") {
                         DateTimePickerAndroid.open({
-                          value: selectedDate ?? new Date(),
+                          value: baseDate,
                           onChange: (event, dateValue) => {
                             if (event.type === "set" && dateValue) {
-                              setSelectedDate(dateValue);
+                              setSelectedDateInput(dateValue);
                             }
                           },
                           mode: "date",
                           display: "calendar",
                         });
                       } else {
+                        setSelectedDateInput(baseDate);
                         setShowIOSDatePicker(true);
                       }
                     }}
@@ -323,11 +591,13 @@ export default function Calendar() {
                   >
                     <Text
                       style={{
-                        color: selectedDate ? colors.text : colors.muted,
+                        color: selectedDateInput ? colors.text : colors.muted,
                         fontSize: scaleFont(16),
                       }}
                     >
-                      {selectedDate ? formatDisplayDate(selectedDate) : "Select date *"}
+                      {selectedDateInput
+                        ? formatDisplayDate(selectedDateInput)
+                        : "Select date *"}
                     </Text>
                     <Ionicons name="calendar" size={20} color={colors.text} />
                   </TouchableOpacity>
@@ -342,13 +612,13 @@ export default function Calendar() {
                       }}
                     >
                       <DateTimePicker
-                        value={selectedDate ?? new Date()}
+                        value={selectedDateInput ?? parseLocalDateKey(selectedDateISO)}
                         mode="date"
                         display="inline"
                         themeVariant={colorScheme === "light" ? "light" : "dark"}
                         onChange={(_, dateValue) => {
                           if (dateValue) {
-                            setSelectedDate(dateValue);
+                            setSelectedDateInput(dateValue);
                           }
                         }}
                         style={{ alignSelf: "stretch" }}
@@ -474,6 +744,97 @@ export default function Calendar() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+    </View>
+  );
+}
+
+type EventCardProps = {
+  item: Event;
+  colors: ThemeColors;
+  scaleFont: (size: number) => number;
+  onDelete: (id: string) => void;
+};
+
+function EventCard({ item, colors, scaleFont, onDelete }: EventCardProps) {
+  return (
+    <View
+      style={{
+        backgroundColor: colors.card,
+        padding: 16,
+        borderRadius: 12,
+        marginBottom: 12,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: colors.text,
+            fontSize: scaleFont(18),
+            fontWeight: "600",
+            flex: 1,
+          }}
+        >
+          {item.title}
+        </Text>
+        <TouchableOpacity onPress={() => onDelete(item.id)}>
+          <Ionicons name="trash-outline" size={20} color={colors.destructive} />
+        </TouchableOpacity>
+      </View>
+      <Text
+        style={{
+          color: colors.muted,
+          marginTop: 8,
+          fontSize: scaleFont(14),
+        }}
+      >
+        {item.dateLabel} at {item.time}
+      </Text>
+      {item.description ? (
+        <Text
+          style={{
+            color: colors.text,
+            marginTop: 8,
+            fontSize: scaleFont(14),
+          }}
+        >
+          {item.description}
+        </Text>
+      ) : null}
+    </View>
+  );
+}
+
+function EmptyState({
+  colors,
+  scaleFont,
+}: {
+  colors: ThemeColors;
+  scaleFont: (size: number) => number;
+}) {
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Ionicons name="calendar-outline" size={64} color={colors.muted} />
+      <Text
+        style={{
+          color: colors.muted,
+          marginTop: 10,
+          fontSize: scaleFont(16),
+        }}
+      >
+        No events yet
+      </Text>
     </View>
   );
 }
