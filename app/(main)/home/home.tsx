@@ -64,6 +64,7 @@ export default function Home() {
             color: colors.text,
             fontSize: scaleFont(32),
             fontWeight: "bold",
+            fontFamily: 'DMSerifDisplay',
             marginBottom: 8,
           }}
         >
@@ -74,6 +75,7 @@ export default function Home() {
           style={{
             color: colors.muted,
             fontSize: scaleFont(16),
+            fontFamily: 'DMSans-Regular',
             marginBottom: 40,
           }}
         >

@@ -116,6 +116,7 @@ export default function Settings() {
             color: colors.text,
             fontSize: scaleFont(32),
             fontWeight: "bold",
+            fontFamily: 'DMSerifDisplay',
             marginBottom: 40,
           }}
         >

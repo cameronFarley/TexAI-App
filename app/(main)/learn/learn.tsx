@@ -30,6 +30,7 @@ export default function Learn() {
             color: colors.text,
             fontSize: scaleFont(32),
             fontWeight: "bold",
+            fontFamily: 'DMSerifDisplay',
             marginBottom: 30,
           }}
         >
