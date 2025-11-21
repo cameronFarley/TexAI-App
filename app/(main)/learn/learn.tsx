@@ -54,13 +54,13 @@ export default function Learn() {
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                backgroundColor: colors.warningSoft,
+                backgroundColor: colors.blueSoft,
                 justifyContent: "center",
                 alignItems: "center",
                 marginRight: 16,
               }}
             >
-              <Ionicons name="book" size={24} color={colors.warning} />
+              <Ionicons name="book" size={24} color={colors.blue} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -96,13 +96,13 @@ export default function Learn() {
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                backgroundColor: colors.primarySoft,
+                backgroundColor: colors.yellowSoft,
                 justifyContent: "center",
                 alignItems: "center",
                 marginRight: 16,
               }}
             >
-              <Ionicons name="albums" size={24} color={colors.primary} />
+              <Ionicons name="albums" size={24} color={colors.yellow} />
             </View>
             <View style={{ flex: 1 }}>
               <Text
@@ -138,13 +138,13 @@ export default function Learn() {
                 width: 50,
                 height: 50,
                 borderRadius: 25,
-                backgroundColor: colors.successSoft,
+                backgroundColor: colors.greenSoft,
                 justifyContent: "center",
                 alignItems: "center",
                 marginRight: 16,
               }}
             >
-              <Ionicons name="reader" size={24} color={colors.success} />
+              <Ionicons name="reader" size={24} color={colors.green} />
             </View>
             <View style={{ flex: 1 }}>
               <Text

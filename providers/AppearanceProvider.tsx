@@ -1,9 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Appearance,
-  type ColorSchemeName,
-} from "react-native";
-import {
   createContext,
   type ReactNode,
   useCallback,
@@ -12,6 +8,10 @@ import {
   useMemo,
   useState,
 } from "react";
+import {
+  Appearance,
+  type ColorSchemeName,
+} from "react-native";
 
 type ThemeColors = {
   background: string;
@@ -32,6 +32,12 @@ type ThemeColors = {
   warningSoft: string;
   purple: string;
   purpleSoft: string;
+  blue: string;
+  blueSoft: string;
+  yellow: string;
+  yellowSoft: string;
+  green: string;
+  greenSoft: string;
   destructive: string;
 };
 
@@ -51,33 +57,33 @@ const STORAGE_KEY = "appearance-preferences";
 
 const basePalette = {
   dark: {
-    background: "#000000",
-    card: "#1E1E1E",
-    surface: "#2C2C2C",
-    text: "#FFFFFF",
-    muted: "#B0B0B0",
-    border: "#2C2C2C",
-    overlay: "rgba(0,0,0,0.65)",
+    background: "#000000", 
+    card: "#121212",       
+    surface: "#1C1C1C",    
+    text: "#F5F5F5",       
+    muted: "#8A8A8A",      
+    border: "#333333",     
+    overlay: "rgba(0,0,0,0.85)",
   },
   light: {
-    background: "#F7F7F7",
-    card: "#FFFFFF",
-    surface: "#EFEFF4",
-    text: "#111111",
-    muted: "#5C5C5C",
-    border: "#E5E5EA",
-    overlay: "rgba(0,0,0,0.2)",
+    background: "#FFFFFF", 
+    card: "#FDFDFD",       
+    surface: "#F5F5F5",
+    text: "#121212",       
+    muted: "#666666",
+    border: "#E0E0E0",
+    overlay: "rgba(0,0,0,0.3)",
   },
 };
 
 const highContrastOverrides = {
   dark: {
     text: "#FFFFFF",
-    muted: "#FFFFFF",
-    border: "#FFFFFF",
+    muted: "#E5E5E5",
+    border: "#D4AF37",
     background: "#000000",
-    card: "#050505",
-    surface: "#0C0C0C",
+    card: "#000000",
+    surface: "#000000",
   },
   light: {
     text: "#000000",
@@ -170,46 +176,67 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
 
     const primary = highContrast
       ? colorScheme === "light"
-        ? "#1A73E8"
-        : "#FFD60A"
-      : "#007AFF";
+        ? "#806000" 
+        : "#FFD700" 
+      : colorScheme === "light"
+        ? "#B4922B" 
+        : "#D4AF37";
 
     const onPrimary =
-      highContrast && colorScheme === "dark" ? "#000000" : "#FFFFFF";
+      colorScheme === "dark" ? "#000000" : "#FFFFFF"; 
+
     const purple = colorScheme === "dark" ? "#AA6FD6" : "#8A4FFF";
+    const blue = colorScheme === "dark" ? "rgba(0, 122, 255, 0.8)" : "rgba(0, 98, 202, 0.8)";
+    const yellow = colorScheme === "dark" ? "rgba(255, 255, 0, 0.8)" : "rgba(184, 184, 2, 0.8)";
+    const green = colorScheme === "dark" ? "rgba(0, 255, 145, 0.8)" : "rgba(0, 255, 145, 0.6)";
 
     return {
       ...palette,
       primary,
       primarySoft:
         colorScheme === "dark"
-          ? "rgba(0,122,255,0.2)"
-          : "rgba(0,122,255,0.12)",
+          ? "rgba(212, 175, 55, 0.2)"
+          : "rgba(180, 146, 43, 0.15)",
       onPrimary,
       inputBackground: highContrast
         ? colorScheme === "dark"
           ? "#000000"
           : "#FFFFFF"
         : colorScheme === "dark"
-          ? "#2C2C2C"
-          : "#E8E8ED",
-      chip: colorScheme === "dark" ? "#2C2C2C" : "#E5E5EA",
+          ? "#1A1A1A" 
+          : "#F0F0F5",
+      chip: colorScheme === "dark" ? "#1A1A1A" : "#E5E5EA",
       success: "#34C759",
       successSoft:
         colorScheme === "dark"
           ? "rgba(52,199,89,0.2)"
           : "rgba(52,199,89,0.12)",
-      warning: "#FF9F0A",
+      warning: "#FFD700", 
       warningSoft:
         colorScheme === "dark"
-          ? "rgba(255,159,10,0.2)"
-          : "rgba(255,159,10,0.12)",
+          ? "rgba(255, 215, 0, 0.2)"
+          : "rgba(255, 215, 0, 0.12)",
       purple,
       purpleSoft:
         colorScheme === "dark"
           ? "rgba(170,111,214,0.25)"
           : "rgba(170,111,214,0.18)",
-      destructive: "#FF3B30",
+      blue,
+      blueSoft:
+        colorScheme === "dark"
+          ? "rgba(0, 122, 255, 0.2)"
+          : "rgba(0, 122, 255, 0.1)",
+      yellow,
+      yellowSoft:
+        colorScheme === "dark"
+          ? "rgba(255, 255, 0, 0.2)"
+          : "rgba(255, 255, 0, 0.1)",
+      green,
+      greenSoft:
+        colorScheme === "dark"
+          ? "rgba(52,199,89,0.2)"
+          : "rgba(52,199,89,0.12)",
+      destructive: "#FF453A",
     };
   }, [colorScheme, highContrast]);
 

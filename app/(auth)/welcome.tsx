@@ -1,59 +1,69 @@
 import { router } from "expo-router";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-
+import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useAppearance } from "@/providers/AppearanceProvider";
 
-/* 
-Welcome screen,  when you launch the app for the first time this is what shows
-Prompts the user with the option to create an account or log in to one
-*/
+// Placeholder image
+const TMP_IMAGE = "https://images.unsplash.com/photo-1639674242803-a9de33b3a835?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 export default function Welcome() {
   const { colors, scaleFont } = useAppearance();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.content}>
-        <View style={[styles.iconContainer, { backgroundColor: colors.card }]}>
-          <Ionicons name="calendar" size={80} color={colors.primary} />
+      
+      {/* Image Section */}
+      <View style={styles.cardsContainer}>
+        <View style={[styles.cardWrapper, styles.cardCenter, { backgroundColor: colors.card }]}>
+          <Image source={{uri: TMP_IMAGE}} style={styles.cardImage} />
         </View>
+      </View>
 
+      {/* Text Content */}
+      <View style={styles.content}>
         <Text
           style={[
             styles.title,
-            { color: colors.text, fontSize: scaleFont(32) },
+            { color: colors.text, fontSize: scaleFont(35) },
           ]}
         >
-          Welcome to TexAI
+          TexAI
         </Text>
+
+        <View style={styles.taglineRow}>
+          <Text style={[styles.taglineText, { color: colors.muted, fontSize: scaleFont(18) }]}>Learn</Text>
+          <Text style={[styles.chevron, { color: colors.muted, fontSize: scaleFont(16) }]}>{'>'}</Text>
+          <Text style={[styles.taglineText, { color: colors.muted, fontSize: scaleFont(18) }]}>Practice</Text>
+          <Text style={[styles.chevron, { color: colors.muted, fontSize: scaleFont(16) }]}>{'>'}</Text>
+          <Text style={[styles.taglineText, { color: colors.muted, fontSize: scaleFont(18) }]}>Succeed</Text>
+        </View>
 
         <Text
           style={[
             styles.subtitle,
             {
               color: colors.muted,
-              fontSize: scaleFont(18),
-              lineHeight: scaleFont(26),
+              fontSize: scaleFont(16),
+              lineHeight: scaleFont(24),
             },
           ]}
         >
-          Organize your schedule and chat with AI - all in one place
+          Your new favorite cybersecurity learning tool,{'\n'}curated for Texas Law Enforcement.
         </Text>
       </View>
 
+      {/* Buttons */}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
-            styles.primaryButton,
-            { backgroundColor: colors.primary },
+            styles.cardButton,
+            { backgroundColor: colors.card },
           ]}
           onPress={() => router.push("/(auth)/signup/name")}
         >
           <Text
             style={[
-              styles.primaryButtonText,
-              { fontSize: scaleFont(18), color: colors.onPrimary },
+              styles.cardButtonText,
+              { fontSize: scaleFont(18), color: colors.primary },
             ]}
           >
             Get Started
@@ -62,20 +72,25 @@ export default function Welcome() {
 
         <TouchableOpacity
           style={[
-            styles.secondaryButton,
-            { backgroundColor: colors.card },
+            styles.primaryButton,
+            { backgroundColor: colors.primary },
           ]}
           onPress={() => router.replace("/(main)/home/home")}
         >
           <Text
             style={[
-              styles.secondaryButtonText,
-              { color: colors.primary, fontSize: scaleFont(16) },
+              styles.primaryButtonText,
+              { color: colors.onPrimary, fontSize: scaleFont(18) },
             ]}
           >
-            Already have an account
+            Log In
           </Text>
         </TouchableOpacity>
+
+        <Text style={[styles.legalText, { color: colors.muted }]}>
+           By continuing you agree to TexAI's{'\n'}
+           <Text style={{ textDecorationLine: 'underline' }}>Privacy Policy</Text> and <Text style={{ textDecorationLine: 'underline' }}>Terms and Conditions</Text>.
+        </Text>
       </View>
     </View>
   );
@@ -84,48 +99,102 @@ export default function Welcome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingTop: 30,
+    paddingBottom: 40,
+    paddingHorizontal: 24,
+    justifyContent: "space-between",
   },
+  // Image
+  cardsContainer: {
+    height: 480,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+    position: 'relative', 
+  },
+  cardWrapper: {
+    width: '100%',
+    height: '100%',
+    padding: 0,
+    borderRadius: 12,
+    position: 'absolute',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
+    resizeMode: 'cover',
+  },
+  cardCenter: {
+    transform: [{ rotate: '0deg' }, { translateY: -10 }],
+    zIndex: 2,
+  },
+
+  // Text Content
   content: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-  },
-  iconContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 40,
+    marginTop: 10,
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: "800",
     marginBottom: 16,
     textAlign: "center",
+    fontFamily: "DMSerifDisplay", 
+  },
+  taglineRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 8,
+    fontFamily: 'DMSans-Regular',
+  },
+  taglineText: {
+    fontWeight: '600',
+  },
+  chevron: {
+    fontWeight: 'bold',
   },
   subtitle: {
     textAlign: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
+
+  // Buttons
   buttonContainer: {
-    gap: 12,
-    paddingBottom: 40,
+    gap: 16,
+    marginTop: 20,
+  },
+  cardButton: {
+    padding: 18,
+    borderRadius: 16,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  cardButtonText: {
+    fontWeight: "700",
+    fontFamily: 'DMSans-Bold',
   },
   primaryButton: {
     padding: 18,
-    borderRadius: 12,
+    borderRadius: 16,
     alignItems: "center",
   },
   primaryButtonText: {
-    fontWeight: "600",
+    fontWeight: "700",
   },
-  secondaryButton: {
-    padding: 18,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    fontWeight: "600",
+  legalText: {
+    textAlign: 'center',
+    fontSize: 11,
+    marginTop: 10,
+    lineHeight: 16,
   },
 });
