@@ -1,12 +1,11 @@
-import { useAppearance } from "@/providers/AppearanceProvider";
+import { AppearanceContext, useAppearance } from "@/providers/AppearanceProvider";
 import { router } from "expo-router";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-
-// Placeholder image
-const TMP_IMAGE = "https://images.unsplash.com/photo-1639674242803-a9de33b3a835?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+import { Image, StyleSheet, Text, TouchableOpacity, View, Appearance } from "react-native";
 
 export default function Welcome() {
-  const { colors, scaleFont } = useAppearance();
+  const { colors, scaleFont, colorScheme } = useAppearance();
+  // Placeholder image
+  const TMP_IMAGE = colorScheme === "dark" ? "https://images.unsplash.com/photo-1639674242803-a9de33b3a835?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" : "https://images.unsplash.com/photo-1739204334690-bed4d8f6a89c?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

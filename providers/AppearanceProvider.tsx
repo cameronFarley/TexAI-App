@@ -179,7 +179,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
         ? "#806000" 
         : "#FFD700" 
       : colorScheme === "light"
-        ? "#B4922B" 
+        ? "#FFCC00" 
         : "#D4AF37";
 
     const onPrimary =
@@ -187,7 +187,7 @@ export function AppearanceProvider({ children }: { children: ReactNode }) {
 
     const purple = colorScheme === "dark" ? "#AA6FD6" : "#8A4FFF";
     const blue = colorScheme === "dark" ? "rgba(0, 122, 255, 0.8)" : "rgba(0, 98, 202, 0.8)";
-    const yellow = colorScheme === "dark" ? "rgba(255, 255, 0, 0.8)" : "rgba(184, 184, 2, 0.8)";
+    const yellow = colorScheme === "dark" ? "rgba(255, 255, 0, 0.8)" : "rgba(255, 215, 0, 1)";
     const green = colorScheme === "dark" ? "rgba(0, 255, 145, 0.8)" : "rgba(0, 255, 145, 0.6)";
 
     return {
