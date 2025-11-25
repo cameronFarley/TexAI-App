@@ -1,6 +1,6 @@
-import { router } from "expo-router";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { useAppearance } from "@/providers/AppearanceProvider";
+import { router } from "expo-router";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 // Placeholder image
 const TMP_IMAGE = "https://images.unsplash.com/photo-1639674242803-a9de33b3a835?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -99,14 +99,14 @@ export default function Welcome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 30,
+    paddingTop: 70,
     paddingBottom: 40,
     paddingHorizontal: 24,
     justifyContent: "space-between",
   },
   // Image
   cardsContainer: {
-    height: 480,
+    height: '48%',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
