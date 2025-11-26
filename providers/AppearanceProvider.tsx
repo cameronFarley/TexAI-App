@@ -57,17 +57,17 @@ const STORAGE_KEY = "appearance-preferences";
 
 const basePalette = {
   dark: {
-    background: "#000000", 
-    card: "#121212",       
+    background: "#121212", 
+    card: "rgba(34,34,34,0.6)",       
     surface: "#1C1C1C",    
     text: "#F5F5F5",       
-    muted: "#8A8A8A",      
+    muted: "#999999",      
     border: "#333333",     
     overlay: "rgba(0,0,0,0.85)",
   },
   light: {
-    background: "#FFFFFF", 
-    card: "#FDFDFD",       
+    background: "#f2f4f3", 
+    card: "rgba(231,233,232,0.6)",       
     surface: "#F5F5F5",
     text: "#121212",       
     muted: "#666666",

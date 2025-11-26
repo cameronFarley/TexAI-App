@@ -4,6 +4,8 @@ import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { MotiView } from "moti";
+import Svg, { Rect, Path } from "react-native-svg";
 
 import { useAppearance } from "@/providers/AppearanceProvider";
 
@@ -58,6 +60,12 @@ export default function Home() {
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ paddingBottom: 40 }}
     >
+
+    <Svg width="100%" height="400" viewBox="0 0 900 450" style={{ position: "absolute", top: 0, left: 0 }}>
+      <Rect x="0" y="-230" width="900" height="240" fill="#FCAF3C" />
+      <Path d="M0 191L37.5 203C75 215 150 239 225 251.2C300 263.3 375 263.7 450 253.3C525 243 600 222 675 214.7C750 207.3 825 213.7 862.5 216.8L900 220L900 0L862.5 0C825 0 750 0 675 0C600 0 525 0 450 0C375 0 300 0 225 0C150 0 75 0 37.5 0L0 0Z" fill="#FCAF3C" stroke-linecap="round" stroke-linejoin="miter" />
+    </Svg>
+
       <View style={{ padding: 20, paddingTop: topPadding }}>
         <Text
           style={{
@@ -73,7 +81,7 @@ export default function Home() {
 
         <Text
           style={{
-            color: colors.muted,
+            color: colors.text,
             fontSize: scaleFont(16),
             fontFamily: 'DMSans-Regular',
             marginBottom: 40,
@@ -84,6 +92,11 @@ export default function Home() {
 
         {/* Quick Actions */}
         <View style={{ gap: 16 }}>
+          <MotiView
+            from={{ opacity:0, translateY: 12 }}
+            animate={{ opacity:1, translateY:0 }}
+            transition={{ type: "timing", duration: 500 }}
+          >
           <TouchableOpacity
             style={{
               backgroundColor: colors.card,
@@ -124,7 +137,14 @@ export default function Home() {
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.muted} />
           </TouchableOpacity>
+          </MotiView>
 
+
+          <MotiView
+            from={{ opacity:0, translateY: 12 }}
+            animate={{ opacity:1, translateY:0 }}
+            transition={{ type: "timing", duration: 500 }}
+          >
           <TouchableOpacity
             style={{
               backgroundColor: colors.card,
@@ -165,7 +185,14 @@ export default function Home() {
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.muted} />
           </TouchableOpacity>
+          </MotiView>
 
+
+          <MotiView
+            from={{ opacity:0, translateY: 12 }}
+            animate={{ opacity:1, translateY:0 }}
+            transition={{ type: "timing", duration: 500 }}
+          >
           <TouchableOpacity
             style={{
               backgroundColor: colors.card,
@@ -206,6 +233,7 @@ export default function Home() {
             </View>
             <Ionicons name="chevron-forward" size={20} color={colors.muted} />
           </TouchableOpacity>
+          </MotiView>
         </View>
 
         {/* Today’s Overview */}

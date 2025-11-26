@@ -1,6 +1,10 @@
-import { AppearanceContext, useAppearance } from "@/providers/AppearanceProvider";
+import { useAppearance } from "@/providers/AppearanceProvider";
 import { router } from "expo-router";
-import { Image, StyleSheet, Text, TouchableOpacity, View, Appearance } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
+//change background color so its not so stark black or white (offwhite and dark grayish)
+//add shadows to buttons if not already, maybe change the font of subtext
+//How do I make the UI look more advanced????
 
 export default function Welcome() {
   const { colors, scaleFont, colorScheme } = useAppearance();
@@ -62,7 +66,7 @@ export default function Welcome() {
           <Text
             style={[
               styles.cardButtonText,
-              { fontSize: scaleFont(18), color: colors.primary },
+              { fontSize: scaleFont(18), color: colors.text },
             ]}
           >
             Get Started

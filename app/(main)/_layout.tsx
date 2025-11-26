@@ -12,7 +12,7 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors.card,
+          backgroundColor: colors.surface,
           borderTopWidth: 0,
           height: 70,
           paddingBottom: 10,
