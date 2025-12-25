@@ -6,12 +6,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useAppearance } from "@/providers/AppearanceProvider";
 
 /*
-This is the code for the learn tab
-- Maybe create a way to specify what topics to parctice?
-- I imagine we provide all of the information? Not let the user input it
-- Connect: Flashcards, Quiz, Learn, Matching
-- Create an update system for the mastery based on Learn perhaps?
-- Unique the style so its not copy and paste of home page
+Replace this with a screen of topics to do a quick read overview.
+can separate topics logarithmically.
 */
 
 export default function Learn() {
