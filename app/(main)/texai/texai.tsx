@@ -161,16 +161,16 @@ function MessageBubble({ message, colors, scaleFont }: { message: Message; color
         borderBottomLeftRadius: isUser ? 16 : 2,
       }}
     >
-      <Text style={{ color: isUser ? colors.onPrimary : colors.text, fontSize: scaleFont(16) }}>
+      <Text style={{ color: isUser ? "#121212" : colors.text, fontSize: scaleFont(16) }}>
         {message.text}
       </Text>
       
       {/* Show Source References if available */}
       {message.metadata?.references && message.metadata.references.length > 0 && (
         <View style={{ marginTop: 8, paddingTop: 8, borderTopWidth: 1, borderTopColor: isUser ? "rgba(255,255,255,0.2)" : colors.border }}>
-            <Text style={{ fontSize: scaleFont(10), color: isUser ? "rgba(255,255,255,0.8)" : colors.muted, fontWeight: 'bold' }}>SOURCES:</Text>
+            <Text style={{ fontSize: scaleFont(10), color: isUser ? colors.text : colors.muted, fontWeight: 'bold' }}>SOURCES:</Text>
             {message.metadata.references.map((ref, idx) => (
-                <Text key={idx} style={{ fontSize: scaleFont(10), color: isUser ? "rgba(255,255,255,0.8)" : colors.muted }}>• {ref}</Text>
+                <Text key={idx} style={{ fontSize: scaleFont(10), color: isUser ? colors.text : colors.muted }}>• {ref}</Text>
             ))}
         </View>
       )}
